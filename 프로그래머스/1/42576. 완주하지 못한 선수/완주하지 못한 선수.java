@@ -1,24 +1,22 @@
-import java.util.*;class Solution {
+import java.util.*;
+
+class Solution {
     public String solution(String[] participant, String[] completion) {
+        
+        String answer = "";
         
         HashMap<String, Integer> map = new HashMap<>();
         
         for(String p : participant) {
-            if(map.containsKey(p)) {
-                map.put(p, map.get(p) + 1);
-            } else {
-                map.put(p, 1);
-            }
+            map.put(p, map.getOrDefault(p, 0) + 1);
         }
         
         for(String c : completion) {
             map.put(c, map.get(c) - 1);
         }
         
-        String answer = "";
-        
-        for (HashMap.Entry<String, Integer> entry : map.entrySet()) {
-            if (entry.getValue() > 0) {
+        for(HashMap.Entry<String, Integer> entry : map.entrySet()) {
+            if(entry.getValue() > 0) {
                 answer = entry.getKey();
                 break;
             }
@@ -26,6 +24,6 @@ import java.util.*;class Solution {
         
         return answer;
         
-  
+
     }   
 }
