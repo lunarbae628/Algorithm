@@ -2,24 +2,27 @@ import java.util.*;
 
 class Solution {
     public String[] solution(String[] players, String[] callings) {
-        String[] answer = {};
         
-        Map<String, Integer> map = new HashMap<>();
+        HashMap<String, Integer> map = new HashMap<>();
         
-        for (int i =0; i < players.length; i++) {
+        for(int i = 0; i < players.length; i++) {
             map.put(players[i], i);
         }
         
-        for (String call : callings) {
-            int idx = map.get(call);
-            String tmp = players[idx-1];
-            players[idx-1] = call;
+        for(String c : callings) {
+            int idx = map.get(c);
+            String tmp = players[idx - 1];
+            
+            players[idx-1] = c;
             players[idx] = tmp;
             
-            map.put(call, idx-1);
+            map.put(c, idx-1);
             map.put(tmp, idx);
+        
         }
         
         return players;
+        
+        
     }
 }
