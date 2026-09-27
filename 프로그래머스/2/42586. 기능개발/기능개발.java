@@ -5,45 +5,41 @@ class Solution {
         ArrayList<Integer> answer = new ArrayList<>();
         
         Queue<Integer> q = new LinkedList<>();
-        Queue<Integer> sQ = new LinkedList<>();
         
-        for (int i = 0; i < progresses.length; i++) {
-            q.offer(progresses[i]);
-            sQ.offer(speeds[i]);
-        }
-        
-        while(!q.isEmpty()) {
-            int todayDeploy = 0;
+        for(int i = 0; i < progresses.length; i++) {
+            int dates = (100 - progresses[i]) / speeds[i];
             
-            int currentSize = q.size(); 
-            for(int i = 0; i < currentSize; i++) {
-                int tmpP = q.poll();
-                int tmpS = sQ.poll();
-            
-                tmpP += tmpS;
-                
-                q.offer(tmpP);
-                sQ.offer(tmpS);
+            if((100 - progresses[i]) % speeds[i] > 0) {
+                dates++;
             }
             
-            boolean fuck = true;
+            q.offer(dates);
+        }
+        
+        
+        while(!q.isEmpty()) {
+            int p1 = q.poll();
+            int todayAnswer = 1;
             
-            while(fuck) {
-                if(!q.isEmpty() && q.peek() >= 100) {
+            while(!q.isEmpty()) {
+                int p2 = q.peek();
+                
+                if (p1 >= p2) {
+                    todayAnswer++;
                     q.poll();
-                    sQ.poll();
-                    todayDeploy++;
                 } else {
-                    fuck = false;
+                    break;
                 }
             }
             
-            if(todayDeploy > 0 ) {
-                answer.add(todayDeploy);
-            }
-                    
+            answer.add(todayAnswer);
         }
-        
+            
+            
         return answer.stream().mapToInt(Integer::intValue).toArray();
+            
+        
+        
+        
     }
 }
