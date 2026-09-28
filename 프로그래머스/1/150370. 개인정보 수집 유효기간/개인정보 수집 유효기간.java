@@ -2,33 +2,42 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String today, String[] terms, String[] privacies) {
+        List<Integer> answer = new ArrayList<>();
+        Map<String, Integer> map = new HashMap<>();
         
-        ArrayList<Integer> answer = new ArrayList<>();
-        
-        HashMap<String, Integer> map = new HashMap<>();
-        
-        String[] todayList = today.split("\\.");
-        
-        int todayNum = getDates(todayList);
+        int todays = covertToDates(today);
         
         for(String t : terms) {
-            String[] term = t.split(" ");
-            map.put(term[0], Integer.parseInt(term[1]) * 28);
+            String [] term = t.split(" ");
+            
+            map.put(term[0], Integer.valueOf(term[1]));   
         }
         
-        for(int i = 0; i<privacies.length; i++) {
-            String[] pri = privacies[i].split(" ");
+        int idx = 0;
+        
+        for(String p : privacies) {
+            String[] pri = p.split(" ");
+            int dates = covertToDates(pri[0]);
+            int dueDates = map.get(pri[1]) * 28;
             
-            if(todayNum - getDates(pri[0].split("\\.")) >= map.get(pri[1])) {
-                answer.add(i+1);
-            }
+            if (dates + dueDates <= todays) {
+                answer.add(idx+1);
+                System.out.println(map.get(pri[1]));
+            } 
+            idx++;
         }
         
         return answer.stream().mapToInt(Integer::intValue).toArray();
-            
     }
     
-    private int getDates(String[] date) {
-        return (Integer.parseInt(date[0]) * 12 * 28) + (Integer.parseInt(date[1]) * 28) + Integer.parseInt(date[2]);
+    
+    private int covertToDates(String date) {
+        String[] splitDate = date.split("\\.");
+        int year = Integer.parseInt(splitDate[0]);
+        int month = Integer.parseInt(splitDate[1]);
+        int day = Integer.parseInt(splitDate[2]);
+        
+        return (year * 12 * 28) + (month * 28) + day;
     }
+    
 }
