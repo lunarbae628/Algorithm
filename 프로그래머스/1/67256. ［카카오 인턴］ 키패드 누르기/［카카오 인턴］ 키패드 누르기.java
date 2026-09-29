@@ -2,16 +2,6 @@ class Solution {
     public String solution(int[] numbers, String hand) {
         String answer = "";
         
-        int[][] phone = new int[4][3];
-        
-        for(int i = 0; i < 3; i++) {
-            for(int j = 0; j < 3; j++) {
-                phone[i][j] = j + 1 + (3) * i;
-            }
-            phone[3][0] = -2;
-            phone[3][2] = -1;
-        }
-        
         int[] l_location = {3, 0};
         int[] r_location = {3, 2};
         
