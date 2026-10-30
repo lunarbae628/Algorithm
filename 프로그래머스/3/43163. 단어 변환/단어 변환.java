@@ -1,42 +1,44 @@
+import java.util.*;
 class Solution {
     
-    int answer = 1000000000;
+    static class Node {
+        String word;
+        int cnt;
+        
+        Node(String word, int cnt) {
+            this.word = word;
+            this.cnt = cnt;
+        }
+    }
+    
     boolean[] visited;
     
     public int solution(String begin, String target, String[] words) {
         visited = new boolean[words.length];
         
-        dfs(begin, target, words, 0);
+        Deque<Node> dp = new ArrayDeque<>();
         
-        if(answer == 1000000000) {
-            return 0;
-        }
+        dp.add(new Node(begin, 0));
         
-        return answer;
-    }
-    
-    
-    public void dfs(String begin, String target, String[] words, int cnt) {
-        if(begin.equals(target)) {
-            answer = Math.min(answer, cnt);
-            return;
-        }
-        
-        if(cnt >= answer) {
-            return;
-        }
-        
-        for(int i = 0; i < words.length; i++) {
+        while(!dp.isEmpty()) {
+            Node now = dp.poll();
             
-            if(!visited[i] && canConvert(begin, words[i])) {
-                visited[i] = true;
+            if(now.word.equals(target)) {
+                return now.cnt;
+            }
+            
+            for(int i = 0; i < words.length; i++) {
                 
-                dfs(words[i], target, words, cnt+1);
-                
-                visited[i] = false;
+                if(!visited[i] && canConvert(now.word, words[i])) {
+                    visited[i] = true;
+                    
+                    dp.add(new Node(words[i], now.cnt+1));
+                }
             }
             
         }
+        
+        return 0;
     }
     
     public boolean canConvert(String now, String target) {
