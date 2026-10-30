@@ -1,11 +1,7 @@
 import java.util.*;
-
 class Solution {
     public String solution(String[] participant, String[] completion) {
-        
-        String answer = "";
-        
-        HashMap<String, Integer> map = new HashMap<>();
+        Map<String, Integer> map = new HashMap<>();
         
         for(String p : participant) {
             map.put(p, map.getOrDefault(p, 0) + 1);
@@ -15,15 +11,10 @@ class Solution {
             map.put(c, map.get(c) - 1);
         }
         
-        for(HashMap.Entry<String, Integer> entry : map.entrySet()) {
-            if(entry.getValue() > 0) {
-                answer = entry.getKey();
-                break;
-            }
+        for(String key : map.keySet()) {
+            if(map.get(key) == 1) return key;
         }
         
-        return answer;
-        
-
-    }   
+        return "";
+    }
 }
