@@ -1,35 +1,34 @@
 import java.util.*;
-
 class Solution {
     public int[] solution(String[] id_list, String[] report, int k) {
-        
         int[] answer = new int[id_list.length];
-        HashMap<String, Integer> answerIdxMap = new HashMap<>();
-        HashMap<String, HashSet<String>> reported = new HashMap<>();
+        
+        Map<String, Integer> idxMap = new HashMap<>();
+        Map<String, HashSet<String>> reported = new HashMap<>();
         
         for(int i = 0; i < id_list.length; i++) {
-            answerIdxMap.put(id_list[i],i);
+            idxMap.put(id_list[i], i);
             reported.put(id_list[i], new HashSet<>());
         }
         
         for(String r : report) {
-            String[] pair = r.split(" ");
+            String[] list = r.split(" ");
             
-            HashSet<String> set = reported.get(pair[1]);
+            String reporter = list[0];
+            String reportee = list[1];
             
-            set.add(pair[0]);
+            reported.get(reportee).add(reporter);
         }
         
-        
-        for(HashMap.Entry<String, HashSet<String>> entry : reported.entrySet()) {
-            if(entry.getValue().size() >= k) {
-                for(String s : entry.getValue()) {
-                    answer[answerIdxMap.get(s)]++;
+        for(String key : reported.keySet()) {
+            
+            if(reported.get(key).size() >= k) {
+                for(String reporter : reported.get(key)) {
+                    answer[idxMap.get(reporter)]++;
                 }
             }
+            
         }
-        
-        
         return answer;
     }
 }
