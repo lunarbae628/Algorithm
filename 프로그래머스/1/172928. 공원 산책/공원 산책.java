@@ -1,74 +1,75 @@
 class Solution {
+    int h;
+    int w;
     public int[] solution(String[] park, String[] routes) {
+        int[] answer = {};
         
-        int[] start = new int[2];
+        h = park.length;
+        w = park[0].length();
         
-        int h = park.length;
-        int w = park[0].length();
+        int s_x = 0;
+        int s_y = 0;
+        boolean foundStart = false;
         
-        int[][] park2 = new int[h][w];
-        
-        for(int i = 0; i < park.length; i++) {
-            for(int idx=0; idx<park[0].length(); idx++) {
-                if(park[i].charAt(idx) == 'S') {
-                    start[0] = i;
-                    start[1] = idx;
-                }
-                
-                if(park[i].charAt(idx) == 'X') {
-                    park2[i][idx] = 1;
-                }
-            }
-        }
-        
-        for(String route: routes) {
-            String[] parts = route.split(" ");
-            char dir = parts[0].charAt(0);
-            int num = Integer.parseInt(parts[1]);
-            
-            int dx = 0;
-            int dy = 0;
-            
-            if (dir == 'E') {
-                dx = 1;
-            }
-
-            if (dir == 'W') {
-                dx = -1;
-            }
-
-            if (dir == 'S') {
-                dy = 1;
-            }
-
-            if (dir == 'N') {
-                dy = -1;
-            }
-            
-            boolean canMove = true;
-            
-            for(int j=1; j<=num; j++) {
-                int nextX = start[1] + j * dx;
-                int nextY = start[0] + j * dy;
-                
-                if (nextX < 0 || nextX >= w || nextY < 0 || nextY >= h) {
-                    canMove = false;
-                    break;
-                }
-                
-                if (park2[nextY][nextX] == 1) {
-                    canMove = false;
+        for(int i = 0; i < h; i++) {
+            for(int j = 0; j < w; j++) {
+                if(park[i].charAt(j) == 'S') {
+                    s_x = i;
+                    s_y = j;
+                    foundStart = true;
                     break;
                 }
             }
-            
-            if (canMove) {
-                start[0] = start[0] + dy * num;
-                start[1] = start[1] + dx * num;
-            }
+            if(foundStart) break;
         }
         
-
-        return start;
+        for(String r : routes) {
+            String direct = r.split(" ")[0];
+            int steps = Integer.parseInt(r.split(" ")[1]);
+            answer = moveTo(park, direct, steps, s_x, s_y);
+            s_x = answer[0];
+            s_y = answer[1];
+        }
+        
+        return answer;
+    }
+    
+    private int[] moveTo(String[] park, String direct, int steps, int sx, int sy) {
+        
+        int dx = 0;
+        int dy = 0;
+        
+        int nx = sx;
+        int ny = sy;
+        
+        switch (direct) {
+                case "E" -> {
+                    dy = 1;
+                }
+                case "W" -> {
+                    dy = -1;
+                }
+                case "S" -> {
+                    dx = 1;
+                }
+                case "N" -> {
+                    dx = -1;
+                }
+        }
+        
+        for(int i = 0; i < steps; i++) {
+            nx += dx;
+            ny += dy;
+            
+            if(nx >= 0 && nx < h && ny >= 0 && ny < w && (park[nx].charAt(ny) != 'X')) {
+                continue;
+            } else {
+                return new int[] {sx, sy};
+            }
+            
+        }
+        
+        return new int[] {nx, ny};
+        
     }
 }
