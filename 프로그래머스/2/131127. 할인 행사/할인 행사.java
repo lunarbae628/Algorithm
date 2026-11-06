@@ -2,49 +2,48 @@ import java.util.*;
 
 class Solution {
     public int solution(String[] want, int[] number, String[] discount) {
-        int answer = 0;
+        Map<String, Integer> wantMap = new HashMap<>();
+        Map<String, Integer> windowMap = new HashMap<>();
         
-        Map<String, Integer> map = new HashMap<>();
         for(int i = 0; i < want.length; i++) {
-            map.put(want[i], number[i]);
+            wantMap.put(want[i], number[i]);
         }
         
-        Map<String, Integer> discntMap = new HashMap<>();
         for(int i = 0; i < 10; i++) {
-            discntMap.put(discount[i], discntMap.getOrDefault(discount[i], 0) + 1);
+            windowMap.put(discount[i], windowMap.getOrDefault(discount[i], 0) + 1);
         }
         
-        if(matchWantAndDiscount(map, discntMap)) {
-            answer++;
-        }
+        int answer = 0;
+
+        if(canBuy(wantMap, windowMap)) answer++;
         
-        // 슬라이딩 윈도우 연습하셈
-        for(int i = 1; i <= discount.length-10; i++) {
-            
-            String outItem = discount[i-1];
-            
-            if(discntMap.get(outItem) == 1) {
-                discntMap.remove(outItem);
+        for(int i = 10; i < discount.length; i++) {
+            String prev = discount[i-10];
+            String next = discount[i];
+
+            if(windowMap.get(prev) == 1) {
+                windowMap.remove(prev);
             } else {
-                discntMap.put(outItem, discntMap.get(outItem) - 1);
+                windowMap.put(prev, windowMap.get(prev) -1);
             }
+                
+            windowMap.put(next, windowMap.getOrDefault(next, 0) + 1);
             
-            String inItem = discount[i+9];
-            discntMap.put(inItem, discntMap.getOrDefault(inItem, 0) + 1);
-            
-            if(matchWantAndDiscount(map, discntMap)) {
+            if(canBuy(wantMap, windowMap)) {
                 answer++;
-            }
+            } 
         }
-            
+        
+        
         return answer;
     }
     
-    private boolean matchWantAndDiscount(Map<String, Integer> wantMap, Map<String, Integer> discntMap) {
-        
+    private boolean canBuy(Map<String, Integer> wantMap, Map<String, Integer> windowMap) {
         for(String key : wantMap.keySet()) {
             
-            if(wantMap.get(key) > discntMap.getOrDefault(key, 0)) {
+            if(!windowMap.containsKey(key)) return false;
+            
+            if(windowMap.get(key) < wantMap.get(key)) {
                 return false;
             }
         }
